@@ -71,7 +71,7 @@ struct Room **rooms;
 struct Monster ** monsters;
 int numberOfMonsters;
 Player * user;
-Trap traps[8];
+Trap traps[10];
 Spell speed;
 } Level;
 
@@ -186,7 +186,7 @@ int gameLoop1(Player * player) {
 
    
     spawn_food(level, 2);
-    spawn_gold(level, 1);
+    spawn_gold(level, 2);
     spawn_weapons(level);
     spawn_speed_spell(level);
     spawn_health_spell(level);
@@ -243,7 +243,10 @@ int gameLoop1(Player * player) {
             health_timer = 0;
 
             if (level->user->health <= 0) {
-                mvprintw(10, 10, "You died! Game over.");
+                clear();
+                mvprintw(14, 40, "You died! Game over.Your Exp: %d",level->user->gold);
+                getch();
+                mvprintw(14, 40, "Press any key to continue");
                 refresh();
                 return -1;
             }
@@ -263,7 +266,7 @@ int gameLoop2(Player * player) {
 
 
     spawn_food(level, 2);
-    spawn_gold(level, 1);
+    spawn_gold(level, 2);
     spawn_weapons(level);
     spawn_health_spell(level);
     
@@ -279,6 +282,7 @@ int gameLoop2(Player * player) {
             if (ch == 'i') {
                 inInventory = false; // Return to game
                 clear();
+                gameLoop2(player);
                 printgamehub(level);
                 refresh();
             }
@@ -328,7 +332,7 @@ int gameLoop3(Player * player) {
 
 
     spawn_food(level, 2);
-    spawn_gold(level, 1);
+    spawn_gold(level, 2);
     spawn_weapons(level);
     spawn_health_spell(level);
 
@@ -345,6 +349,7 @@ int gameLoop3(Player * player) {
                 inInventory = false; // Return to game
                 clear();
                 printgamehub(level);
+                gameLoop3(player);
                 refresh();
             }
             continue;
@@ -386,34 +391,35 @@ int gameLoop4(Player * player) {
     int ch;
     Position *newPosition;
     Level *level;
-    bool inInventory = false; // Tracks whether we're in the inventory menu
+    bool inInventory = false; 
 
     level = createlevel(4, player);
 
     spawn_food(level, 2);
-    spawn_gold(level, 1);
+    spawn_gold(level, 2);
     spawn_weapons(level);
     spawn_health_spell(level);
 
     printgamehub(level);
 
-    // Timer to track health decrease
+    
     int health_timer = 0;
     const int health_decrease_interval = 50;
 
     while ((ch = getch()) != 'q') {
         if (inInventory) { 
-        // If in the inventory menu
+       
             if (ch == 'i') {
-                inInventory = false; // Return to game
+                inInventory = false; 
                 clear();
                 printgamehub(level);
+                gameLoop4(player);
                 refresh();
             }
             continue;
         }
 
-        if (ch == 'i') { // Open inventory menu
+        if (ch == 'i') { 
             inInventory = true;
             displayInventory(level->user);
             continue;
@@ -428,7 +434,7 @@ int gameLoop4(Player * player) {
 
       
 
-        // Decrease health periodically
+      
         health_timer++;
         if (health_timer >= health_decrease_interval) {
             level->user->health--;
@@ -485,8 +491,8 @@ void menuLoop()
                         break;
                 }
                 
-                get_player_info(&u, &p, &e);
-                clear();
+                 get_player_info(&u, &p, &e);
+                 clear();
                 Player *player = playersetup();
                 player->health = initial_health;
                 player->maxhealth = initial_health;
@@ -534,7 +540,7 @@ int ScreenSetUp() {
     init_pair(1, COLOR_YELLOW, COLOR_BLACK); 
     init_pair(2, COLOR_BLUE, COLOR_BLACK);   
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
-    
+    init_pair(4, COLOR_RED, COLOR_BLACK);
     refresh();
     srand(time(NULL));
     return 1;
@@ -854,7 +860,7 @@ int checkposition1(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 8; i++) {
+     for (int i = 0; i < 10; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -889,7 +895,7 @@ int checkposition1(Position *newPosition, Level *level) {
         clear();
          gameLoop2(level->user);
 
-        case '$': 
+        case 'O': 
             user->food += 1; 
             if(user->food>=10){
             user->food=2;
@@ -906,7 +912,7 @@ int checkposition1(Position *newPosition, Level *level) {
             refresh();
             break;
 
-        case 'C': // Common gold
+        case '$': // Common gold
             user->gold += 1;
             level->tiles[newPosition->y][newPosition->x] = '.';
             mvprintw(newPosition->y, newPosition->x, ".");
@@ -1041,7 +1047,7 @@ int checkposition2(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 5; i++) {
+     for (int i = 0; i < 10; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1074,7 +1080,7 @@ int checkposition2(Position *newPosition, Level *level) {
         clear();
         gameLoop3(level->user);
 
-        case '$': 
+        case 'O': 
             user->food += 1; 
             if(user->food>=2){
             user->food=2;
@@ -1091,7 +1097,7 @@ int checkposition2(Position *newPosition, Level *level) {
             refresh();
             break;
 
-        case 'C': // Common gold
+        case '$': // Common gold
             user->gold += 1;
             level->tiles[newPosition->y][newPosition->x] = '.';
             mvprintw(newPosition->y, newPosition->x, ".");
@@ -1223,7 +1229,7 @@ int checkposition3(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 5; i++) {
+     for (int i = 0; i < 10; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1257,7 +1263,7 @@ int checkposition3(Position *newPosition, Level *level) {
         clear();
         gameLoop4(level->user);
 
-        case '$': 
+        case 'O': 
             user->food += 1; 
             if(user->food>=2){
             user->food=2;
@@ -1274,7 +1280,7 @@ int checkposition3(Position *newPosition, Level *level) {
             refresh();
             break;
 
-        case 'C': // Common gold
+        case '$': // Common gold
             user->gold += 1;
             level->tiles[newPosition->y][newPosition->x] = '.';
             mvprintw(newPosition->y, newPosition->x, ".");
@@ -1406,7 +1412,7 @@ int checkposition4(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 5; i++) {
+     for (int i = 0; i < 10; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1436,7 +1442,7 @@ int checkposition4(Position *newPosition, Level *level) {
         clear();
         mvprintw(14, 40,"You won! Your Exp:%d", level->user->gold);
         break;
-        case '$': 
+        case 'O': 
             user->food += 1; 
             if(user->food>=2){
             user->food=2;
@@ -1453,7 +1459,7 @@ int checkposition4(Position *newPosition, Level *level) {
             refresh();
             break;
 
-        case 'C': // Common gold
+        case '$': // Common gold
             user->gold += 1;
             level->tiles[newPosition->y][newPosition->x] = '.';
             mvprintw(newPosition->y, newPosition->x, ".");
@@ -1807,6 +1813,7 @@ void get_player_info(Menu *u, Menu *p, Menu *e)
 
         if (strlen(p->password) < 7) {
             mvprintw(LINES / 2 + 8, COLS / 2 - 24, "Your password should have at least 7 characters");
+              mvprintw(LINES / 2 - 1, COLS / 2 +6, "                                     ");
             continue;
         }
 
@@ -1818,6 +1825,7 @@ void get_player_info(Menu *u, Menu *p, Menu *e)
 
         if (!(hasLower && hasUpper && hasDigit)) {
             mvprintw(LINES / 2 + 9, COLS / 2 - 37, "Password must contain at least one uppercase, one lowercase, and one digit");
+             mvprintw(LINES / 2 - 1, COLS / 2 +6, "                                     ");
             continue;
         }
 
@@ -1830,6 +1838,7 @@ void get_player_info(Menu *u, Menu *p, Menu *e)
 
         if (!is_valid_email(e->email)) {
             mvprintw(LINES / 2 + 10, COLS / 2 - 24, "Invalid Email. Please try again.");
+            mvprintw(LINES / 2, COLS / 2 +3, "                                  ");
             continue;
         }
     
@@ -1889,9 +1898,10 @@ void spawn_food(Level *level, int food_count) {
         food->position.y = rand() % (room->height - 2) + room->position.y + 1;
         food->eaten = false;
 
-   
-        mvprintw(food->position.y, food->position.x, "$");
-        level->monsters[i] = (Monster *)food;  // Treat as a generic object
+        attron(COLOR_PAIR(4));
+        mvprintw(food->position.y, food->position.x, "O");
+        attroff(COLOR_PAIR(4));
+        level->monsters[i] = (Monster *)food; 
     }
 
     refresh();
@@ -1906,7 +1916,7 @@ void spawn_gold(Level *level, int gold_count) {
 
       
         for (int j = 0; j < gold_count; j++) {
-            int is_black_gold = rand() % 10 == 0; // 10% chance for black gold
+            int is_black_gold = rand() % 4 == 0; 
             int x = rand() % (room->width - 2) + room->position.x + 1;
             int y = rand() % (room->height - 2) + room->position.y + 1;
 
@@ -1916,9 +1926,9 @@ void spawn_gold(Level *level, int gold_count) {
                 attroff(COLOR_PAIR(2));
                 level->tiles[y][x] = 'B'; 
                 attron(COLOR_PAIR(1)); 
-                mvprintw(y, x, "C");
+                mvprintw(y, x, "$");
                 attroff(COLOR_PAIR(1));
-                level->tiles[y][x] = 'C'; 
+                level->tiles[y][x] = '$'; 
             }
         }
     }
@@ -1962,7 +1972,7 @@ void spawn_traps(Level *level) {
     int i, roomIndex;
     Trap *trap;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < 10; i++) {
         trap = &level->traps[i];
         trap->triggered = false;
         roomIndex = rand() % level->numberofrooms;
