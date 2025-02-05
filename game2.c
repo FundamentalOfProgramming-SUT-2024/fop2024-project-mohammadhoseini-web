@@ -1,3 +1,4 @@
+
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -128,7 +129,7 @@ void spawn_speed_spell(Level *level);
 //menu
 int ScreenSetUp();
 
-enum{START_GAME, QUIT_GAME, HARDNESS, PROFILE, SCORES};
+
 int mainMenu (int numberitems, char *choices[]);
 void get_player_info(Menu *u, Menu *p, Menu *e);
 bool is_valid_email(const char *email);
@@ -175,6 +176,14 @@ int speedTimer = 0;  // Global variable for speed boost timer
 int speedDuration = 10;  // Duration of speed boost in seconds
 bool speedBoostActive = false;
 
+time_t start_time; 
+
+
+int get_elapsed_time() {
+    return (int)(time(NULL) - start_time);
+}
+
+
 
 int gameLoop1(Player * player) {
     int ch;
@@ -190,6 +199,7 @@ int gameLoop1(Player * player) {
     spawn_weapons(level);
     spawn_speed_spell(level);
     spawn_health_spell(level);
+    start_time = time(NULL); 
     
 
     printgamehub(level);
@@ -244,9 +254,8 @@ int gameLoop1(Player * player) {
 
             if (level->user->health <= 0) {
                 clear();
-                mvprintw(14, 40, "You died! Game over.Your Exp: %d",level->user->gold);
-                getch();
-                mvprintw(14, 40, "Press any key to continue");
+                mvprintw(14, 40, "You died! Game over.Your Exp: %d, your Gold:%d",level->user->exp, level->user->gold);
+                napms(10000);
                 refresh();
                 return -1;
             }
@@ -313,6 +322,9 @@ int gameLoop2(Player * player) {
 
             if (level->user->health <= 0) {
                 mvprintw(10, 10, "You died! Game over.");
+                clear();
+               mvprintw(14, 40, "You died! Game over.Your Exp: %d, your Gold:%d",level->user->exp, level->user->gold);
+                napms(10000);
                 refresh();
                 return -1;
             }
@@ -378,6 +390,9 @@ int gameLoop3(Player * player) {
 
             if (level->user->health <= 0) {
                 mvprintw(10, 10, "You died! Game over.");
+                clear();
+            mvprintw(14, 40, "You died! Game over.Your Exp: %d, your Gold:%d",level->user->exp, level->user->gold);
+                napms(10000);
                 refresh();
                 return -1;
             }
@@ -442,6 +457,9 @@ int gameLoop4(Player * player) {
 
             if (level->user->health <= 0) {
                 mvprintw(10, 10, "You died! Game over.");
+                clear();
+            mvprintw(14, 40, "You died! Game over.Your Exp: %d, your Gold:%d",level->user->exp, level->user->gold);
+                napms(10000);
                 refresh();
                 return -1;
             }
@@ -459,18 +477,35 @@ void menuLoop()
     Menu p;
     Menu e;
     int choice;
-    char * choices[] = {"Start Game", "End Game", "Profile", "Scores"};
-    mainMenu(4, choices);
+    char * choices[] = {"New Game", "Resume Game", "Setting", "ScoreBoard", "End Game"};
+      Player *player = playersetup();
+    mainMenu(5, choices);
 
     while (true)
     {
-        choice = mainMenu(4, choices);
+        choice = mainMenu(5, choices);
 
         switch (choice)
         {
-            case START_GAME:
+            case 0:
             {
-                int difficulty;
+             
+                
+                 get_player_info(&u, &p, &e);
+                 clear();
+               
+            
+                gameLoop1(player);
+                clear();
+            }
+            break;
+
+            case 1:
+                return;
+                break;
+            
+            case 2:
+               int difficulty;
                 char * difficulty_choices[] = {"Easy", "Medium", "Hard"};
                 difficulty = mainMenu(3, difficulty_choices);
                 
@@ -490,26 +525,13 @@ void menuLoop()
                         initial_health = 50; // Default to Easy
                         break;
                 }
-                
-                 get_player_info(&u, &p, &e);
-                 clear();
-                Player *player = playersetup();
-                player->health = initial_health;
+                 player->health = initial_health;
                 player->maxhealth = initial_health;
-            
-                gameLoop1(player);
-                clear();
-            }
-            break;
-
-            case QUIT_GAME:
-                return;
-                break;
-            
-            case SCORES:
                 break;
 
-            case PROFILE:
+            case 3:
+                break;
+            case 4:
                 break;
         }
     }
@@ -548,12 +570,13 @@ int ScreenSetUp() {
 
 
 int printgamehub(Level * level){
+level->user->exp = get_elapsed_time();
 start_color();
 attron(COLOR_PAIR(3));
 mvprintw(26, 4,"Level:%d", level->level);
 mvprintw(26,14 ,"Gold:%d", level->user->gold);
 mvprintw(26, 24,"Hp:%d", level->user->health);
-mvprintw(26, 34,"Exp:%d", level->user->gold);
+mvprintw(26, 34,"Exp:%d", level->user->exp);
 mvprintw(26, 44, "food:%d",level->user->food);
 mvprintw(26, 54,"    ");
 attroff(COLOR_PAIR(3));
@@ -1440,7 +1463,7 @@ int checkposition4(Position *newPosition, Level *level) {
             break;
         case '<':
         clear();
-        mvprintw(14, 40,"You won! Your Exp:%d", level->user->gold);
+        mvprintw(14, 40,"You won! Your Exp:%d , Your Gold:%d", level->user->exp, level->user->gold);
         break;
         case 'O': 
             user->food += 1; 
