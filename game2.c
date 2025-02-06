@@ -269,7 +269,7 @@ int gameLoop2(Player * player) {
     int ch;
     Position *newPosition;
     Level *level;
-    bool inInventory = false; // Tracks whether we're in the inventory menu
+    bool inInventory = false; 
 
     level = createlevel(2, player);
 
@@ -912,7 +912,7 @@ int checkposition1(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(25, 10, "You found the stairs! Moving to the next level...");
+        mvprintw(28,0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
@@ -1097,7 +1097,7 @@ int checkposition2(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(25, 10, "You found the stairs! Moving to the next level...");
+        mvprintw(28, 0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
@@ -1280,7 +1280,7 @@ int checkposition3(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(25, 10, "You found the stairs! Moving to the next level...");
+        mvprintw(28, 0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
