@@ -238,10 +238,10 @@ int gameLoop1(Player * player) {
 
         if (speedBoostActive && time(NULL) - speedTimer >= speedDuration) {
             speedBoostActive = false;
-            mvprintw(28, 0, "Speed boost has expired!                ");
+            mvprintw(36, 0, "Speed boost has expired!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                             ");
+            mvprintw(36, 0, "                                             ");
             refresh();
         }
         move(level->user->position->y, level->user->position->x);
@@ -574,12 +574,12 @@ int printgamehub(Level * level){
 level->user->exp = get_elapsed_time();
 start_color();
 attron(COLOR_PAIR(3));
-mvprintw(26, 4,"Level:%d", level->level);
-mvprintw(26,14 ,"Gold:%d", level->user->gold);
-mvprintw(26, 24,"Hp:%d", level->user->health);
-mvprintw(26, 34,"Exp:%d", level->user->exp);
-mvprintw(26, 44, "food:%d",level->user->food);
-mvprintw(26, 54,"    ");
+mvprintw(34, 4,"Level:%d", level->level);
+mvprintw(34,14 ,"Gold:%d", level->user->gold);
+mvprintw(34, 24,"Hp:%d", level->user->health);
+mvprintw(34, 36,"Exp:%d", level->user->exp);
+mvprintw(34, 44, "food:%d",level->user->food);
+mvprintw(34, 54,"    ");
 attroff(COLOR_PAIR(3));
 
 return 1;
@@ -671,8 +671,8 @@ char ** savelevelpositions(){
 positions = malloc(sizeof(char*)*35);
     for(y=0; y<35; y++){
 
-        positions[y]= malloc(sizeof(char)*120);
-        for(x=0; x<120; x++){
+        positions[y]= malloc(sizeof(char)*150);
+        for(x=0; x<150; x++){
 
             positions[y][x]=mvinch(y, x);
         }
@@ -693,33 +693,33 @@ Room* createroom(int grid, int numberofdoors){
         newroom->position.y=0;
         break;
         case 1:
-        newroom->position.x=33;
+        newroom->position.x=40;
         newroom->position.y=0;
         break;
         case 2:
-        newroom->position.x=66;
+        newroom->position.x=80;
         newroom->position.y=0;
         break;
         case 3:
         newroom->position.x=0;
-        newroom->position.y=14;
+        newroom->position.y=15;
         break;
         case 4:
-        newroom->position.x=33;
-        newroom->position.y=14;
+        newroom->position.x=40;
+        newroom->position.y=15;
         break;
         case 5:
-        newroom->position.x=66;
-        newroom->position.y=14;
+        newroom->position.x=80;
+        newroom->position.y=15;
     
         break;
     }
 
-    newroom->height= rand() % 6 + 4;
-    newroom->width= rand() % 14 + 4;
+    newroom->height= rand() % 6 + 6;
+    newroom->width= rand() % 14 + 6;
 
-    newroom->position.x += rand() % (30- newroom->width) +1;
-    newroom->position.y += rand() % (10- newroom->height) +1;
+    newroom->position.x += rand() % (40- newroom->width) +1;
+    newroom->position.y += rand() % (20- newroom->height) +1;
 
     newroom->doors= malloc(sizeof(Door *)*numberofdoors);
 
@@ -901,11 +901,11 @@ int checkposition1(Position *newPosition, Level *level) {
             trap->position.y == newPosition->y) {
             // Trigger the trap
             trap->triggered = true;
-             mvprintw(28, 0, "You stepped on a trap!                ");
+             mvprintw(36, 0, "You stepped on a trap!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             level->user->health -= 5; 
         
@@ -923,7 +923,7 @@ int checkposition1(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(28,0, "You found the stairs! Moving to the next level...");
+        mvprintw(36,0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
@@ -939,10 +939,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You ate food!                ");
+            mvprintw(36, 0, "You ate food!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -952,10 +952,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-             mvprintw(28, 0, "You got a common gold!                ");
+             mvprintw(36, 0, "You got a common gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -965,10 +965,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You you got a black gold!                ");
+            mvprintw(36, 0, "You you got a black gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -978,11 +978,11 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Mace!                ");
+            mvprintw(36, 0, "You picked up a Mace!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -992,11 +992,11 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You picked up a Dagger!                ");
+            mvprintw(36, 0, "You picked up a Dagger!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1006,10 +1006,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Magic Wand!                ");
+            mvprintw(36, 0, "You picked up a Magic Wand!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
         case 'a': // Arrow
@@ -1018,10 +1018,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up an Arrow!                ");
+            mvprintw(36, 0, "You picked up an Arrow!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1031,10 +1031,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Sword!           ");
+            mvprintw(36, 0, "You picked up a Sword!           ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1045,10 +1045,10 @@ int checkposition1(Position *newPosition, Level *level) {
                 speedTimer = time(NULL);  // Set the current time as the start of the boost
                 mvprintw(newPosition->y, newPosition->x, ".");
                 refresh();
-                mvprintw(28, 0, "You took the speed spell! Speed doubled for 10 seconds.");
+                mvprintw(36, 0, "You took the speed spell! Speed doubled for 10 seconds.");
                 refresh();
                 napms(1000);
-                mvprintw(28, 0, "                                                               ");
+                mvprintw(36, 0, "                                                               ");
                 refresh();
             }
             playermove(newPosition, user, level->tiles);
@@ -1059,10 +1059,10 @@ int checkposition1(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You took the Health spell! Speed doubled for 10 seconds.");
+            mvprintw(36, 0, "You took the Health spell! Speed doubled for 10 seconds.");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                                          ");
+            mvprintw(36, 0, "                                                          ");
             refresh();
             break;
                
@@ -1088,11 +1088,11 @@ int checkposition2(Position *newPosition, Level *level) {
             trap->position.y == newPosition->y) {
             // Trigger the trap
             trap->triggered = true;
-             mvprintw(28, 0, "You stepped on a trap!                ");
+             mvprintw(36, 0, "You stepped on a trap!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             level->user->health -= 5; 
             refresh();
@@ -1108,7 +1108,7 @@ int checkposition2(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(28, 0, "You found the stairs! Moving to the next level...");
+        mvprintw(36, 0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
@@ -1124,10 +1124,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You ate food!                ");
+            mvprintw(36, 0, "You ate food!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1137,10 +1137,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-             mvprintw(28, 0, "You got a common gold!                ");
+             mvprintw(36, 0, "You got a common gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1150,10 +1150,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You you got a black gold!                ");
+            mvprintw(36, 0, "You you got a black gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1163,11 +1163,11 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Mace!                ");
+            mvprintw(36, 0, "You picked up a Mace!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1177,11 +1177,11 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Dagger!                ");
+            mvprintw(36, 0, "You picked up a Dagger!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1191,10 +1191,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Magic Wand!                ");
+            mvprintw(36, 0, "You picked up a Magic Wand!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
         case 'a': // Arrow
@@ -1203,10 +1203,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up an Arrow!                ");
+            mvprintw(36, 0, "You picked up an Arrow!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1216,10 +1216,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You picked up a Sword!           ");
+            mvprintw(36, 0, "You picked up a Sword!           ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1230,10 +1230,10 @@ int checkposition2(Position *newPosition, Level *level) {
                 speedTimer = time(NULL);  
                 mvprintw(newPosition->y, newPosition->x, ".");
                 refresh();
-                mvprintw(28, 0, "You took the speed spell! Speed doubled for 10 seconds.");
+                mvprintw(36, 0, "You took the speed spell! Speed doubled for 10 seconds.");
                 refresh();
                 napms(1000);
-                mvprintw(28, 0, "                                             ");
+                mvprintw(36, 0, "                                             ");
                 refresh();
             }
             playermove(newPosition, user, level->tiles);
@@ -1245,10 +1245,10 @@ int checkposition2(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You took the Health spell! Speed doubled for 10 seconds.");
+            mvprintw(36, 0, "You took the Health spell! Speed doubled for 10 seconds.");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                                          ");
+            mvprintw(36, 0, "                                                          ");
             refresh();
             break;
 
@@ -1270,11 +1270,11 @@ int checkposition3(Position *newPosition, Level *level) {
             trap->position.y == newPosition->y) {
             // Trigger the trap
             trap->triggered = true;
-             mvprintw(28, 0, "You stepped on a trap!                ");
+             mvprintw(36, 0, "You stepped on a trap!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             level->user->health -= 5; 
         
@@ -1291,7 +1291,7 @@ int checkposition3(Position *newPosition, Level *level) {
             playermove(newPosition, user, level->tiles);
             break;
         case '<':
-        mvprintw(28, 0, "You found the stairs! Moving to the next level...");
+        mvprintw(36, 0, "You found the stairs! Moving to the next level...");
         refresh();
         napms(1000);
         clear();
@@ -1307,10 +1307,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You ate food!                ");
+            mvprintw(36, 0, "You ate food!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1320,10 +1320,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-             mvprintw(28, 0, "You got a common gold!                ");
+             mvprintw(36, 0, "You got a common gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1333,10 +1333,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You you got a black gold!                ");
+            mvprintw(36, 0, "You you got a black gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1346,11 +1346,11 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Mace!                ");
+            mvprintw(36, 0, "You picked up a Mace!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1360,11 +1360,11 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Dagger!                ");
+            mvprintw(36, 0, "You picked up a Dagger!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1374,10 +1374,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Magic Wand!                ");
+            mvprintw(36, 0, "You picked up a Magic Wand!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
         case 'a': // Arrow
@@ -1386,10 +1386,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up an Arrow!                ");
+            mvprintw(36, 0, "You picked up an Arrow!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1399,10 +1399,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Sword!           ");
+            mvprintw(36, 0, "You picked up a Sword!           ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1413,10 +1413,10 @@ int checkposition3(Position *newPosition, Level *level) {
                 speedTimer = time(NULL); 
                 mvprintw(newPosition->y, newPosition->x, ".");
                 refresh();
-                mvprintw(28, 0, "You took the speed spell! Speed doubled for 10 seconds.");
+                mvprintw(36, 0, "You took the speed spell! Speed doubled for 10 seconds.");
                 refresh();
                 napms(1000);
-                mvprintw(28, 0, "                                             ");
+                mvprintw(36, 0, "                                             ");
                 refresh();
             }
             playermove(newPosition, user, level->tiles);
@@ -1428,10 +1428,10 @@ int checkposition3(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You took the Health spell! Speed doubled for 10 seconds.");
+            mvprintw(36, 0, "You took the Health spell! Speed doubled for 10 seconds.");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                                          ");
+            mvprintw(36, 0, "                                                          ");
             refresh();
             break;
 
@@ -1453,11 +1453,11 @@ int checkposition4(Position *newPosition, Level *level) {
             trap->position.y == newPosition->y) {
             // Trigger the trap
             trap->triggered = true;
-             mvprintw(28, 0, "You stepped on a trap!                ");
+             mvprintw(36, 0, "You stepped on a trap!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             level->user->health -= 5; 
         
@@ -1486,10 +1486,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You ate food!                ");
+            mvprintw(36, 0, "You ate food!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1499,10 +1499,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-             mvprintw(28, 0, "You got a common gold!                ");
+             mvprintw(36, 0, "You got a common gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1512,10 +1512,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh();
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You you got a black gold!                ");
+            mvprintw(36, 0, "You you got a black gold!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1525,11 +1525,11 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Mace!                ");
+            mvprintw(36, 0, "You picked up a Mace!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1539,11 +1539,11 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh(); 
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You picked up a Dagger!                ");
+            mvprintw(36, 0, "You picked up a Dagger!                ");
             refresh();
             napms(1000);
 
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1553,10 +1553,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, ".");
             refresh(); 
             playermove(newPosition, user, level->tiles);
-            mvprintw(28, 0, "You picked up a Magic Wand!                ");
+            mvprintw(36, 0, "You picked up a Magic Wand!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
         case 'a': // Arrow
@@ -1565,10 +1565,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up an Arrow!                ");
+            mvprintw(36, 0, "You picked up an Arrow!                ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1578,10 +1578,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh();
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You picked up a Sword!           ");
+            mvprintw(36, 0, "You picked up a Sword!           ");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                   ");
+            mvprintw(36, 0, "                                   ");
             refresh();
             break;
 
@@ -1592,10 +1592,10 @@ int checkposition4(Position *newPosition, Level *level) {
                 speedTimer = time(NULL);  // Set the current time as the start of the boost
                 mvprintw(newPosition->y, newPosition->x, ".");
                 refresh();
-                mvprintw(28, 0, "You took the speed spell! Speed doubled for 10 seconds.");
+                mvprintw(36, 0, "You took the speed spell! Speed doubled for 10 seconds.");
                 refresh();
                 napms(1000);
-                mvprintw(28, 0, "                                             ");
+                mvprintw(36, 0, "                                             ");
                 refresh();
             }
             playermove(newPosition, user, level->tiles);
@@ -1607,10 +1607,10 @@ int checkposition4(Position *newPosition, Level *level) {
             mvprintw(newPosition->y, newPosition->x, "."); 
             refresh(); 
             playermove(newPosition, user, level->tiles); 
-            mvprintw(28, 0, "You took the Health spell! Speed doubled for 10 seconds.");
+            mvprintw(36, 0, "You took the Health spell! Speed doubled for 10 seconds.");
             refresh();
             napms(1000);
-            mvprintw(28, 0, "                                                          ");
+            mvprintw(36, 0, "                                                          ");
             refresh();
             break;
 
@@ -1650,7 +1650,7 @@ int checkPosition(int y ,int x){
 int addneighbors(int **frontier, int frontiercount, int ***camefrom, int y, int x) {
 
  
-    if (y >= 0 && y < 25 && x >= 0 && x < 100) {
+    if (y >= 0 && y < 35 && x >= 0 && x < 150) {
         // North
         if (y > 0 && camefrom[y - 1][x][0] < 0 && checkPosition(y - 1, x)) {
             addpositionYX(frontier, frontiercount, y - 1, x);
@@ -1659,14 +1659,14 @@ int addneighbors(int **frontier, int frontiercount, int ***camefrom, int y, int 
             camefrom[y - 1][x][1] = x;
         }
         // South
-        if (y < (25 - 1) && camefrom[y + 1][x][0] < 0 && checkPosition(y + 1, x)) {
+        if (y < (35 - 1) && camefrom[y + 1][x][0] < 0 && checkPosition(y + 1, x)) {
             addpositionYX(frontier, frontiercount, y + 1, x);
             frontiercount++;
             camefrom[y + 1][x][0] = y;
             camefrom[y + 1][x][1] = x;
         }
         // East
-        if (x < (100 - 1) && camefrom[y][x + 1][0] < 0 && checkPosition(y, x + 1)) {
+        if (x < (150 - 1) && camefrom[y][x + 1][0] < 0 && checkPosition(y, x + 1)) {
             addpositionYX(frontier, frontiercount, y, x + 1);
             frontiercount++;
             camefrom[y][x + 1][0] = y;
@@ -1689,17 +1689,17 @@ void pathfind(Position* start, Position* end) {
     int i, j;
     int x, y;
     int tempY;
-    int **frontier = malloc(sizeof(int*) * 100 * 25);
-    int ***camefrom = malloc(sizeof(int**) * 25);
+    int **frontier = malloc(sizeof(int*) * 150 * 35);
+    int ***camefrom = malloc(sizeof(int**) * 35);
 
     int frontierindex = 0;
     int frontiercount = 0;
-    for (i = 0; i < 25 * 100; i++) {
+    for (i = 0; i < 35 * 150; i++) {
         frontier[i] = malloc(sizeof(int) * 2);
     }
-    for (i = 0; i < 25; i++) {
-        camefrom[i] = malloc(sizeof(int*) * 100);
-        for (j = 0; j < 100; j++) {
+    for (i = 0; i < 35; i++) {
+        camefrom[i] = malloc(sizeof(int*) * 150);
+        for (j = 0; j < 150; j++) {
             camefrom[i][j] = malloc(sizeof(int) * 2);
             camefrom[i][j][0] = -1;
             camefrom[i][j][1] = -1;
@@ -1731,7 +1731,7 @@ void pathfind(Position* start, Position* end) {
         tempY = y;
     
         
-        if (tempY >= 0 && tempY < 25 && x >= 0 && x < 100) {
+        if (tempY >= 0 && tempY < 35 && x >= 0 && x < 150) {
             if (camefrom[tempY] != NULL && camefrom[tempY][x] != NULL) {
                 y = camefrom[tempY][x][0];
                 x = camefrom[tempY][x][1];
@@ -1748,11 +1748,11 @@ void pathfind(Position* start, Position* end) {
         }
     }
 
-    for (i = 0; i < 25 * 100; i++) {
+    for (i = 0; i < 35 * 150; i++) {
         free(frontier[i]);
     }
-    for (i = 0; i < 25; i++) {
-        for (j = 0; j < 100; j++) {
+    for (i = 0; i < 35; i++) {
+        for (j = 0; j < 150; j++) {
             free(camefrom[i][j]);
         }
         free(camefrom[i]);
@@ -2079,9 +2079,9 @@ void activate_health_spell(Player *user)
             user->health = user->maxhealth;
             break;
         }
-        mvprintw(28, 0, "Healing... Health: %d", user->health);
+        mvprintw(36, 0, "Healing... Health: %d", user->health);
         refresh();
     }
-    mvprintw(28, 0, "Healing complete!       ");
+    mvprintw(36, 0, "Healing complete!       ");
     refresh();
 }
