@@ -72,8 +72,9 @@ struct Room **rooms;
 struct Monster ** monsters;
 int numberOfMonsters;
 Player * user;
-Trap traps[10];
+Trap traps[15];
 Spell speed;
+Spell heallth;
 } Level;
 
 typedef struct Stair {
@@ -493,7 +494,7 @@ void menuLoop()
                 
                  get_player_info(&u, &p, &e);
                  clear();
-               
+        
             
                 gameLoop1(player);
                 clear();
@@ -532,7 +533,7 @@ void menuLoop()
             case 3:
                 break;
             case 4:
-                break;
+            return;
         }
     }
 }
@@ -627,13 +628,13 @@ Room ** roomssetup() {
 
 void connectdoors(Level * level)
  {
-  int i, j;
+
   int randomroom, randomdoor;
   int count;
 
-  for( i=0; i < level->numberofrooms; i++)
+  for(int i=0; i < level->numberofrooms; i++)
   {
-    for( j=0; j< level->rooms[i]->numberofdoors; j++)
+    for(int j=0; j< level->rooms[i]->numberofdoors; j++)
     {
         if(level->rooms[i]->doors[j]->connected == 1)
         {
@@ -866,9 +867,19 @@ Position * handleinput(int input, Player *user) {
             newPosition->x = user->position->x + 1;
             break;
         case 'b':
-         if(user->health <=45){
+        if(user->food >=1){
+        int is_bad_food = rand() % 2 == 0; 
+        if(is_bad_food){
+
+            user->food--;
+            user->health -= 3;
+        }
+         else{
         user->food--;
-        user->health+= 5;}
+        user->health+= 3;
+        
+        }
+        }
         break;
         default:
             break;
@@ -883,7 +894,7 @@ int checkposition1(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 10; i++) {
+     for (int i = 0; i < 15; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1070,7 +1081,7 @@ int checkposition2(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 10; i++) {
+     for (int i = 0; i < 15; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1252,7 +1263,7 @@ int checkposition3(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 10; i++) {
+     for (int i = 0; i < 15; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1435,7 +1446,7 @@ int checkposition4(Position *newPosition, Level *level) {
     Player *user = level->user;
     char tile = mvinch(newPosition->y, newPosition->x) & A_CHARTEXT;
 
-     for (int i = 0; i < 10; i++) {
+     for (int i = 0; i < 15; i++) {
         Trap *trap = &level->traps[i];
         if (!trap->triggered && 
             trap->position.x == newPosition->x && 
@@ -1981,13 +1992,19 @@ void spawn_weapons(Level *level) {
 
 void displayInventory(Player *player) {
     clear();
-    mvprintw(5, 10, "=== Inventory ===");
+    attron(COLOR_PAIR(2));
+    mvprintw(5, 10, "=== Weapon Inventory ===");
     mvprintw(7, 10, "Mace: %d", player->mace_count);
     mvprintw(8, 10, "Dagger: %d", player->dagger_count);
     mvprintw(9, 10, "Magic Wand: %d", player->wand_count);
     mvprintw(10, 10, "Arrow: %d", player->arrow_count);
     mvprintw(11, 10, "Sword: %d", player->sword_count);
     mvprintw(13, 10, "Press 'i' to return to the game.");
+    attroff(COLOR_PAIR(2));
+    attron(COLOR_PAIR(1));
+    mvprintw(17, 10, "=== Food Inventory ===");
+    mvprintw(19, 10, "foods: %d", player->food);
+    attroff(COLOR_PAIR(1));
     refresh();
 }
 
@@ -1995,11 +2012,10 @@ void spawn_traps(Level *level) {
     int i, roomIndex;
     Trap *trap;
 
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 15; i++) {
         trap = &level->traps[i];
         trap->triggered = false;
-        roomIndex = rand() % level->numberofrooms;
-        Room *room = level->rooms[roomIndex];
+        Room *room = level->rooms[rand() % level->numberofrooms];
 
      
         trap->position.x = room->position.x + (rand() % (room->width - 2)) + 1;
